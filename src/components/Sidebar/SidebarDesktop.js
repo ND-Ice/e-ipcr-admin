@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { FiCalendar, FiClock, FiFolder, FiHome, FiUsers } from "react-icons/fi";
 
 import { SidebarItem } from ".";
-import { useHistory } from "react-router";
+import { useHistory, useLocation } from "react-router";
 
 const sidebarItems = [
   { id: 1, path: "/dashboard", title: "Home", icon: FiHome },
@@ -31,6 +31,7 @@ const sidebarItems = [
 
 export default function SidebarDesktop() {
   const history = useHistory();
+  const location = useLocation();
 
   return (
     <SidebarContainer>
@@ -39,6 +40,7 @@ export default function SidebarDesktop() {
           sidebarInfo={sidebarInfo}
           key={sidebarInfo.id}
           icon={sidebarInfo?.icon}
+          isActive={location.pathname === sidebarInfo.path}
           onNavigate={() => history.push(sidebarInfo.path)}
         />
       ))}

@@ -1,9 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import styled from "styled-components";
 import { UserCard } from "../components/Cards";
-import { FiPlus, FiSearch } from "react-icons/fi";
-import { CustomModal, IconButton } from "../components";
-import { CreateFacultyAccount } from "../components/Modals";
+import SearchBox from "../components/SearchBox";
 
 const faculties = [
   {
@@ -45,32 +43,10 @@ const faculties = [
     dept: "CIT",
   },
 ];
-
-export default function Faculties({ history }) {
-  const [isToggle, setIsToggle] = useState(false);
-
+export default function FacultySearch({ history }) {
   return (
-    <Appcontainer>
-      <AppHeader>
-        <h1 className="m-0">Faculty List</h1>
-        <IconContainer>
-          <IconButton
-            icon={FiSearch}
-            size={40}
-            bg="#0064f9"
-            iconColor="#ffffff"
-            onClick={() => history.push("/dashboard/faculties/search")}
-          />
-          <IconButton
-            icon={FiPlus}
-            size={40}
-            bg="#0064f9"
-            iconColor="#ffffff"
-            onClick={() => setIsToggle(true)}
-          />
-        </IconContainer>
-      </AppHeader>
-
+    <AppContainer>
+      <SearchBox />
       <AppContent>
         {faculties?.map((faculty) => (
           <UserCard
@@ -80,41 +56,11 @@ export default function Faculties({ history }) {
           />
         ))}
       </AppContent>
-
-      <CustomModal
-        heading="Create Faculty Account"
-        show={isToggle}
-        onHide={() => setIsToggle(false)}
-      >
-        <CreateFacultyAccount />
-      </CustomModal>
-    </Appcontainer>
+    </AppContainer>
   );
 }
 
-const Appcontainer = styled.div`
-  border-radius: 0.5rem;
-  overflow: hidden;
-  padding: 0.5rem;
-`;
-
-const AppHeader = styled.div`
-  padding: 0.5rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  border-bottom: 4px solid ${(props) => props.theme.colors.secondary};
-
-  @media (min-width: ${(props) => props.theme.breakpoints.md}) {
-    padding: 1rem;
-  }
-`;
-
-const IconContainer = styled.div`
-  > * {
-    margin-left: 5px;
-  }
-`;
+const AppContainer = styled.div``;
 
 const AppContent = styled.div`
   margin-top: 1rem;

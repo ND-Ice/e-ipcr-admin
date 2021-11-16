@@ -2,10 +2,10 @@ import React from "react";
 import styled from "styled-components";
 import getLetterAvatarBg from "../utils/getLetterAvatarBg";
 
-export default function Avatar({ user }) {
+export default function Avatar({ user, onError, size }) {
   return (
-    <AvatarContainer dept={user?.dept}>
-      <UserAvatar src={user?.image} />
+    <AvatarContainer dept={user?.dept} size={size}>
+      <UserAvatar src={user?.image} onError={onError} />
     </AvatarContainer>
   );
 }
@@ -13,8 +13,8 @@ export default function Avatar({ user }) {
 const AvatarContainer = styled.div`
   display: inline-grid;
   place-items: center;
-  height: 40px;
-  width: 40px;
+  height: ${(props) => `${props.size}px`};
+  width: ${(props) => `${props.size}px`};
   border-radius: 50%;
   overflow: hidden;
   cursor: pointer;

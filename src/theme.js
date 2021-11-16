@@ -21,9 +21,11 @@ const theme = {
     primary: "#171717",
     secondary: "#F5F5F5",
     white: "#ffffff",
+    back: "#000000",
     accent: {
       red: "#EF4444",
       emerald: "#10B981",
+      blue: "#0064f9",
     },
   },
 };

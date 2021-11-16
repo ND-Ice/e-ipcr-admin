@@ -4,8 +4,8 @@ import getLetterAvatarBg from "../utils/getLetterAvatarBg";
 
 export default function LetterAvatar({ user, size }) {
   return (
-    <AvatarContainer size={size} dept={user.dept}>
-      <h1>{user.name[0]} </h1>
+    <AvatarContainer size={size} dept={user?.dept}>
+      <Letter size={size}>{user?.name.trim()[0]} </Letter>
     </AvatarContainer>
   );
 }
@@ -18,9 +18,12 @@ const AvatarContainer = styled.div`
   background: ${(props) => getLetterAvatarBg(props.dept)};
   border-radius: 50%;
   cursor: pointer;
+`;
 
-  > * {
-    font-size: 1.8rem;
-    color: white;
-  }
+const Letter = styled.span`
+  display: flex;
+  font-size: ${(props) => `${props.size * 0.6}px`};
+  font-weight: 700;
+  color: ${(props) => props.theme.colors.white};
+  line-height: 0;
 `;

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import { Avatar, BrandName, IconButton } from "..";
-import { Notifications } from "../Notifications";
+import { AvatarMenu, BrandName, IconButton } from "..";
 import { Sidebar, SidebarItem } from "../Sidebar";
 import {
   FiCalendar,
@@ -11,28 +10,36 @@ import {
   FiMenu,
   FiUsers,
 } from "react-icons/fi";
+import { useHistory, useLocation } from "react-router";
 
 const sidebarItems = [
-  { id: 1, path: "/", title: "Home", icon: FiHome },
-  { id: 2, path: "/faculties", title: "Faculties", icon: FiUsers },
-  { id: 3, path: "/deans", title: "Deans", icon: FiUsers },
-  { id: 4, path: "/evaluations", title: "Evaluations", icon: FiFolder },
+  { id: 1, path: "/dashboard", title: "Home", icon: FiHome },
+  { id: 2, path: "/dashboard/faculties", title: "Faculties", icon: FiUsers },
+  { id: 3, path: "/dashboard/deans", title: "Deans", icon: FiUsers },
+  {
+    id: 4,
+    path: "/dashboard/evaluations",
+    title: "Evaluations",
+    icon: FiFolder,
+  },
   {
     id: 5,
-    path: "/ongoing-evaluations",
+    path: "/dashboard/ongoing-evaluations",
     title: "Ongoing Evaluations",
     icon: FiClock,
   },
   {
     id: 6,
-    path: "/past-evaluations",
+    path: "/dashboard/past-evaluations",
     title: "Past Evaluations",
     icon: FiCalendar,
   },
 ];
 
-export default function Navbar() {
+export default function Navbar({ user }) {
   const [isSidebarToggle, setIsSidebarToggle] = useState(false);
+  const history = useHistory();
+  const location = useLocation();
 
   const handleSidebarToggle = () => setIsSidebarToggle(!isSidebarToggle);
 
@@ -40,13 +47,7 @@ export default function Navbar() {
     <NavContainer>
       <BrandName />
       <StatusContainer>
-        <Avatar
-          user={{
-            dept: "CAS",
-            image:
-              "https://cdn.vox-cdn.com/thumbor/JgCPp2BBxETY596wCp50ccosCfE=/0x0:2370x1574/1200x800/filters:focal(996x598:1374x976)/cdn.vox-cdn.com/uploads/chorus_image/image/68870438/Screen_Shot_2020_07_21_at_9.38.25_AM.0.png",
-          }}
-        />
+        <AvatarMenu user={user} />
         <IconButton
           className="menu-icon"
           size={40}
@@ -62,7 +63,11 @@ export default function Navbar() {
             sidebarInfo={sidebarInfo}
             key={sidebarInfo.id}
             icon={sidebarInfo?.icon}
-            onNavigate={handleSidebarToggle}
+            isActive={location.pathname === sidebarInfo.path}
+            onNavigate={() => {
+              history.push(sidebarInfo.path);
+              return handleSidebarToggle();
+            }}
           />
         ))}
       </Sidebar>
@@ -77,6 +82,7 @@ const NavContainer = styled.nav`
   display: flex;
   align-items: center;
   justify-content: space-between;
+  z-index: 10;
   background: ${(props) => props.theme.colors.secondary};
 
   @media (min-width: ${(props) => props.theme.breakpoints.lg}) {

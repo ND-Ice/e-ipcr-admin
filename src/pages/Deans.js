@@ -3,15 +3,13 @@ import styled from "styled-components";
 import { UserCard } from "../components/Cards";
 import { FiPlus, FiSearch } from "react-icons/fi";
 import { CustomModal, IconButton } from "../components";
-import { CreateFacultyAccount } from "../components/Modals";
+import { CreateDeanAccount } from "../components/Modals";
 
-const faculties = [
+const deans = [
   {
     id: 1,
     name: "Joshua Dela Cruz",
     email: "delacruz.joshua.bscs@gmail.com",
-    image:
-      "https://images.unsplash.com/photo-1453728013993-6d66e9c9123a?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cGhvdG9ncmFwaGVyfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80",
     dept: "CAS",
   },
   {
@@ -24,6 +22,8 @@ const faculties = [
     id: 3,
     name: "Arlene Evangelista",
     email: "evangelista.arlene.cen@gmail.com",
+    image:
+      "https://images.unsplash.com/photo-1453728013993-6d66e9c9123a?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cGhvdG9ncmFwaGVyfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80",
     dept: "CAFA",
   },
   {
@@ -46,20 +46,20 @@ const faculties = [
   },
 ];
 
-export default function Faculties({ history }) {
+export default function Deans({ history }) {
   const [isToggle, setIsToggle] = useState(false);
 
   return (
     <Appcontainer>
       <AppHeader>
-        <h1 className="m-0">Faculty List</h1>
+        <h1 className="m-0">Deans List</h1>
         <IconContainer>
           <IconButton
             icon={FiSearch}
             size={40}
             bg="#0064f9"
             iconColor="#ffffff"
-            onClick={() => history.push("/dashboard/faculties/search")}
+            onClick={() => history.push("/dashboard/deans/search")}
           />
           <IconButton
             icon={FiPlus}
@@ -72,21 +72,21 @@ export default function Faculties({ history }) {
       </AppHeader>
 
       <AppContent>
-        {faculties?.map((faculty) => (
+        {deans?.map((dean) => (
           <UserCard
-            user={faculty}
-            key={faculty.id}
-            onClick={() => history.push(`/dashboard/faculties/${faculty.id}`)}
+            user={dean}
+            key={dean.id}
+            onClick={() => history.push(`/dashboard/deans/${dean.id}`)}
           />
         ))}
       </AppContent>
 
       <CustomModal
-        heading="Create Faculty Account"
+        heading="Create Dean Account"
         show={isToggle}
         onHide={() => setIsToggle(false)}
       >
-        <CreateFacultyAccount />
+        <CreateDeanAccount />
       </CustomModal>
     </Appcontainer>
   );
@@ -99,15 +99,11 @@ const Appcontainer = styled.div`
 `;
 
 const AppHeader = styled.div`
-  padding: 0.5rem;
+  padding: 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
   border-bottom: 4px solid ${(props) => props.theme.colors.secondary};
-
-  @media (min-width: ${(props) => props.theme.breakpoints.md}) {
-    padding: 1rem;
-  }
 `;
 
 const IconContainer = styled.div`

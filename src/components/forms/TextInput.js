@@ -6,7 +6,7 @@ export default function TextInput(props) {
   const { handleChange, setFieldTouched, errors, touched } = useFormikContext();
 
   return (
-    <Form.Group className="mb-3" controlId="formBasicEmail">
+    <Form.Group className="mb-3 w-100" controlId="formBasicEmail">
       <Form.Label>{title}</Form.Label>
       <Form.Control
         type="text"
