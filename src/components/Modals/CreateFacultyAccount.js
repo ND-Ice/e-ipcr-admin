@@ -1,7 +1,19 @@
 import React from "react";
 import styled from "styled-components";
 import * as Yup from "yup";
+import { useDispatch, useSelector } from "react-redux";
+
 import { AppForm, FormControl } from "../forms";
+import { Alert } from "react-bootstrap";
+import { department } from "../../utils";
+import {
+  getFaculties,
+  clearStatus,
+  facultyRequested,
+  facultyAdded,
+  facultyRequestFailed,
+} from "../../store/faculties";
+import facultiesApi from "../../api/faculties";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -16,15 +28,23 @@ const validationSchema = Yup.object().shape({
   dept: Yup.string().required("This field is required."),
 });
 
-const menuItems = [
-  {
-    title: "CAS",
-    value: "CAS",
-  },
-];
-
 export default function CreateFacultyAccount() {
-  const handleSubmit = (values) => console.log(values);
+  const dispatch = useDispatch();
+  const faculties = useSelector(getFaculties);
+
+  const handleSubmit = async (values, { resetForm }) => {
+    try {
+      dispatch(facultyRequested());
+      const faculty = await facultiesApi.addFaculty(values);
+      dispatch(facultyAdded(faculty.data));
+      return setTimeout(() => {
+        resetForm();
+        dispatch(clearStatus());
+      }, 2000);
+    } catch (error) {
+      return dispatch(facultyRequestFailed(error));
+    }
+  };
 
   return (
     <AppContainer>
@@ -38,6 +58,7 @@ export default function CreateFacultyAccount() {
           title="Email Address"
           name="email"
           className="p-2"
+          loading={faculties.loading}
         />
         <NameContainer>
           <FormControl
@@ -45,12 +66,14 @@ export default function CreateFacultyAccount() {
             title="First Name"
             name="firstName"
             className="p-2"
+            loading={faculties.loading}
           />
           <FormControl
             variant="input"
             title="Last Name"
             name="lastName"
             className="p-2"
+            loading={faculties.loading}
           />
         </NameContainer>
         <FormControl
@@ -58,9 +81,24 @@ export default function CreateFacultyAccount() {
           title="Department"
           name="dept"
           className="p-2"
-          menuItems={menuItems}
+          menuItems={department}
+          loading={faculties.loading}
         />
-        <FormControl variant="button" title="Create Account" className="p-2" />
+        {faculties.errorMessage && (
+          <Alert variant="danger">
+            {faculties?.errorMessage?.response?.data ||
+              "Something went wrong. Please try again later."}
+          </Alert>
+        )}
+        {faculties.successMessage && (
+          <Alert variant="success">{faculties.successMessage.message}</Alert>
+        )}
+        <FormControl
+          variant="button"
+          title="Create Account"
+          className="p-2"
+          loading={faculties.loading}
+        />
       </AppForm>
     </AppContainer>
   );

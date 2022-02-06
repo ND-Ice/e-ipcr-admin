@@ -1,69 +1,36 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import styled from "styled-components";
-import { Divider, Links } from "..";
-import { UserCard } from "../Cards";
 
-const deans = [
-  {
-    id: 1,
-    name: "Joshua Dela Cruz",
-    email: "delacruz.joshua.bscs@gmail.com",
-    image:
-      "https://images.unsplash.com/photo-1453728013993-6d66e9c9123a?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cGhvdG9ncmFwaGVyfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80",
-    dept: "CAS",
-  },
-  {
-    id: 2,
-    name: "Hazel Annuncio",
-    email: "annuncio.hazel.cas@gmail.com",
-    dept: "CEN",
-  },
-  {
-    id: 3,
-    name: "Arlene Evangelista",
-    email: "evangelista.arlene.cen@gmail.com",
-    dept: "CAFA",
-  },
-  {
-    id: 4,
-    name: "Jesus Mangubat",
-    email: "mangubat.jesus.cas@gmail.com",
-    dept: "CBA",
-  },
-  {
-    id: 5,
-    name: "Raymond Bolalin",
-    email: "bolalin.raymond.cas@gmail.com",
-    dept: "CHM",
-  },
-  {
-    id: 6,
-    name: "Jefferson Costales",
-    email: "costales.jefferson.cas@gmail.com",
-    dept: "CIT",
-  },
-];
+import { Links } from "..";
+import { UserCard } from "../Cards";
+import { getDeans } from "../../store/deans";
+
 export default function DeanTrailer() {
+  const deans = useSelector(getDeans);
+
   return (
     <Container>
-      <header>
-        <h2>Deans</h2>
-      </header>
-      <Divider bg="#000000" />
+      <AppHeader>
+        <h4 className="m-0">Supervisor</h4>
+      </AppHeader>
       <Content>
-        {deans.slice(0, 6).map((faculty) => (
+        {deans?.list?.slice(0, 6).map((faculty) => (
           <UserCard key={faculty.id} user={faculty} />
         ))}
       </Content>
       <LinkContainer>
-        <Links title="View More..." to="/dashboard/faculties" />
+        <Links title="View More..." to="/dashboard/deans" />
       </LinkContainer>
     </Container>
   );
 }
 
-const Container = styled.div`
-  padding: 1rem;
+const Container = styled.div``;
+
+const AppHeader = styled.div`
+  padding: 0.5rem;
+  border-bottom: 2px solid ${({ theme }) => theme.colors.secondary};
 `;
 
 const Content = styled.div`

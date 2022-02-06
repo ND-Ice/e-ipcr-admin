@@ -2,28 +2,37 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useHistory } from "react-router";
 import OutsideClickHandler from "react-outside-click-handler";
+
 import { Avatar, LetterAvatar } from ".";
 
-export default function AvatarMenu({ user, menu }) {
+import { useDispatch } from "react-redux";
+import { userLoggedOut } from "../store/user";
+
+export default function AvatarMenu({ user }) {
   const [isToggle, setIsToggle] = useState(false);
   const [IsImageError, setImageError] = useState(false);
   const history = useHistory();
+  const dispatch = useDispatch();
 
   return (
     <OutsideClickHandler onOutsideClick={() => setIsToggle(false)}>
       <Container>
         <div onClick={() => setIsToggle(!isToggle)}>
-          {IsImageError || !user.image ? (
+          {IsImageError || !user?.image?.current ? (
             <LetterAvatar size={40} user={user} />
           ) : (
             <Avatar user={user} size={40} onError={() => setImageError(true)} />
           )}
         </div>
         <DropDownItems active={isToggle}>
-          <DropDownItem onClick={() => history.push("/dashboard/me")}>
-            Profile
+          <DropDownItem
+            onClick={() => {
+              dispatch(userLoggedOut());
+              history.push("/");
+            }}
+          >
+            Logout
           </DropDownItem>
-          <DropDownItem onClick={() => history.push("/")}>Logout</DropDownItem>
         </DropDownItems>
       </Container>
     </OutsideClickHandler>

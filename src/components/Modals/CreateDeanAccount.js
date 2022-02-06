@@ -1,7 +1,19 @@
 import React from "react";
 import styled from "styled-components";
 import * as Yup from "yup";
+import { useDispatch, useSelector } from "react-redux";
+
 import { AppForm, FormControl } from "../forms";
+import { Alert } from "react-bootstrap";
+import { department } from "../../utils";
+import {
+  getDeans,
+  clearStatus,
+  deansAdded,
+  deansRequested,
+  deansRequestFailed,
+} from "../../store/deans";
+import deansApi from "../../api/deans";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -16,15 +28,23 @@ const validationSchema = Yup.object().shape({
   dept: Yup.string().required("This field is required."),
 });
 
-const menuItems = [
-  {
-    title: "CAS",
-    value: "CAS",
-  },
-];
-
 export default function CreateDeanAccount() {
-  const handleSubmit = (values) => console.log(values);
+  const deans = useSelector(getDeans);
+  const dispatch = useDispatch();
+
+  const handleSubmit = async (values, { resetForm }) => {
+    try {
+      dispatch(deansRequested());
+      const dean = await deansApi.addDean(values);
+      dispatch(deansAdded(dean.data));
+      return setTimeout(() => {
+        dispatch(clearStatus());
+        return resetForm();
+      }, 2000);
+    } catch (error) {
+      return dispatch(deansRequestFailed(error));
+    }
+  };
 
   return (
     <AppContainer>
@@ -38,6 +58,7 @@ export default function CreateDeanAccount() {
           title="Email Address"
           name="email"
           className="p-2"
+          loading={deans.loading}
         />
         <NameContainer>
           <FormControl
@@ -45,12 +66,14 @@ export default function CreateDeanAccount() {
             title="First Name"
             name="firstName"
             className="p-2"
+            loading={deans.loading}
           />
           <FormControl
             variant="input"
             title="Last Name"
             name="lastName"
             className="p-2"
+            loading={deans.loading}
           />
         </NameContainer>
         <FormControl
@@ -58,9 +81,24 @@ export default function CreateDeanAccount() {
           title="Department"
           name="dept"
           className="p-2"
-          menuItems={menuItems}
+          menuItems={department}
+          loading={deans.loading}
         />
-        <FormControl variant="button" title="Create Account" className="p-2" />
+        {deans.successMessage && (
+          <Alert variant="success">{deans.successMessage.message}</Alert>
+        )}
+        {deans.errorMessage && (
+          <Alert variant="danger">
+            {deans?.errorMessage?.error?.data ||
+              "Something went wrong. Please try again later."}
+          </Alert>
+        )}
+        <FormControl
+          variant="button"
+          title="Create Account"
+          className="p-2"
+          loading={deans.loading}
+        />
       </AppForm>
     </AppContainer>
   );

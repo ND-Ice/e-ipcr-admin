@@ -1,9 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import * as Yup from "yup";
+import { useDispatch, useSelector } from "react-redux";
 
 import { Links } from "../components";
 import { AppForm, FormControl } from "../components/forms";
+
+import authApi from "../api/auth";
+import {
+  userRequested,
+  userRequestFailed,
+  userReceived,
+  getUser,
+} from "../store/user";
+import { Alert } from "react-bootstrap";
 
 const validationSchema = Yup.object().shape({
   email: Yup.string()
@@ -15,9 +25,22 @@ const validationSchema = Yup.object().shape({
 });
 
 export default function LoginPage({ history }) {
-  const handleSubmit = (values) => {
-    history.push("/dashboard");
-    return console.log(values);
+  const dispatch = useDispatch();
+  const user = useSelector(getUser);
+
+  useEffect(() => {
+    if (user.currentUser) return history.push("/dashboard");
+  }, []);
+
+  const handleSubmit = async (values) => {
+    try {
+      dispatch(userRequested());
+      const user = await authApi.login(values);
+      dispatch(userReceived(user.data));
+      return history.push("/dashboard");
+    } catch (error) {
+      return dispatch(userRequestFailed(error));
+    }
   };
   return (
     <AppContainer>
@@ -38,18 +61,27 @@ export default function LoginPage({ history }) {
             className="p-2"
             title="Email Address"
             name="email"
+            loading={user.loading}
           />
           <FormControl
             variant="password"
             className="p-2"
             title="Password"
             name="password"
+            loading={user.loading}
           />
-          <FormControl variant="button" className="w-100 p-2" title="Login" />
-          <LinkContainer>
-            <Links to="/forgot-password" title="Forgot Password" />
-            <Links to="/activate-account" title="Activate Account?" />
-          </LinkContainer>
+          {user.errorMessage && (
+            <Alert variant="danger">
+              {user?.errorMessage?.response?.data ||
+                "Something went wrong. Please try again later."}
+            </Alert>
+          )}
+          <FormControl
+            variant="button"
+            className="w-100 p-2"
+            title="Login"
+            loading={user.loading}
+          />
         </AppForm>
       </FormContainer>
     </AppContainer>

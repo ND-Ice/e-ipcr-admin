@@ -3,8 +3,9 @@ import { Form } from "react-bootstrap";
 import { useFormikContext } from "formik";
 
 export default function Select(props) {
-  const { menuItems, name, title, ...otherProps } = props;
-  const { setFieldTouched, handleChange, touched, errors } = useFormikContext();
+  const { menuItems, name, loading, title, ...otherProps } = props;
+  const { setFieldTouched, handleChange, touched, errors, values } =
+    useFormikContext();
   return (
     <Form.Group className="mb-3" controlId="formBasicEmail">
       <Form.Label>{title}</Form.Label>
@@ -13,6 +14,8 @@ export default function Select(props) {
         name={name}
         onBlur={() => setFieldTouched(name)}
         onChange={handleChange(name)}
+        value={values[name]}
+        disabled={loading}
         isValid={touched[name] && !errors[name]}
         isInvalid={!touched[name] || !errors[name] ? false : true}
         {...otherProps}
@@ -20,7 +23,7 @@ export default function Select(props) {
         <option>Select option</option>
         {menuItems?.map((menuItem) => (
           <option key={menuItem.value} value={menuItem?.value}>
-            {menuItem?.title}
+            {menuItem?.value}
           </option>
         ))}
       </Form.Select>

@@ -1,55 +1,47 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
 
 import { Avatar, LetterAvatar } from "../components";
 import InformationCard from "../components/Cards/InformationCard";
 import background from "../image/background.jpg";
-
-const user = {
-  image:
-    "https://upload.wikimedia.org/wikipedia/commons/9/9a/Gull_portrait_ca_usa.jpg",
-  name: "Joshua Dela Cruz",
-  dept: "CAS",
-};
-
-const introInfo = [
-  { id: 1, title: "Lives in San Juan Metro Manila, Philippines" },
-  { id: 2, title: "Bachelor of Science in Computer Science" },
-];
-
-const basicInfo = [
-  { id: 1, title: "Joshua Dela Cruz" },
-  { id: 2, title: "July 02, 2000" },
-  { id: 3, title: "Ligaya, Gabaldon Nueva Ecija" },
-  { id: 4, title: "Male" },
-  { id: 5, title: "21 yrs. old" },
-];
-
-const contactInfo = [
-  { id: 1, title: "delacruzjoshua691@gmail.com" },
-  { id: 2, title: "09662048118" },
-];
-
-// const BasicInfo
+import { getFaculties } from "../store/faculties";
 
 export default function FacultyPreview({ match }) {
   const [imageError, setImageError] = useState(false);
+  const dispatch = useDispatch();
+  const faculties = useSelector(getFaculties);
+
+  useEffect(() => {}, []);
+  console.log(faculties);
+
   return (
     <AppContainer>
       <AppHeader>
-        {!imageError && (
-          <Avatar size={150} user={user} onError={() => setImageError(true)} />
+        {!imageError ? (
+          <Avatar
+            size={150}
+            user={faculties.preview}
+            onError={() => setImageError(true)}
+          />
+        ) : (
+          <LetterAvatar size={150} user={faculties.preview} />
         )}
-        {imageError && <LetterAvatar size={150} user={user} />}
         <h1 className="text-white mt-2">Joshua Dela Cruz</h1>
       </AppHeader>
 
       <AppContent>
         <GridContainer>
-          <InformationCard infoItem={introInfo} title="Introduction" />
-          <InformationCard infoItem={contactInfo} title="Contact Information" />
+          <InformationCard infoItem={faculties.preview} title="Introduction" />
+          <InformationCard
+            infoItem={faculties.preview}
+            title="Contact Information"
+          />
         </GridContainer>
-        <InformationCard infoItem={basicInfo} title="Basic Information" />
+        <InformationCard
+          infoItem={faculties.preview}
+          title="Basic Information"
+        />
       </AppContent>
     </AppContainer>
   );

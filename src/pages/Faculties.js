@@ -1,132 +1,142 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { UserCard } from "../components/Cards";
-import { FiPlus, FiSearch } from "react-icons/fi";
-import { CustomModal, IconButton } from "../components";
-import { CreateFacultyAccount } from "../components/Modals";
+import { useDispatch, useSelector } from "react-redux";
+import { Table, Button, Badge, Modal } from "react-bootstrap";
 
-const faculties = [
-  {
-    id: 1,
-    name: "Joshua Dela Cruz",
-    email: "delacruz.joshua.bscs@gmail.com",
-    image:
-      "https://images.unsplash.com/photo-1453728013993-6d66e9c9123a?ixid=MnwxMjA3fDB8MHxzZWFyY2h8Nnx8cGhvdG9ncmFwaGVyfGVufDB8fDB8fA%3D%3D&ixlib=rb-1.2.1&w=1000&q=80",
-    dept: "CAS",
-  },
-  {
-    id: 2,
-    name: "Hazel Annuncio",
-    email: "annuncio.hazel.cas@gmail.com",
-    dept: "CEN",
-  },
-  {
-    id: 3,
-    name: "Arlene Evangelista",
-    email: "evangelista.arlene.cen@gmail.com",
-    dept: "CAFA",
-  },
-  {
-    id: 4,
-    name: "Jesus Mangubat",
-    email: "mangubat.jesus.cas@gmail.com",
-    dept: "CBA",
-  },
-  {
-    id: 5,
-    name: "Raymond Bolalin",
-    email: "bolalin.raymond.cas@gmail.com",
-    dept: "CHM",
-  },
-  {
-    id: 6,
-    name: "Jefferson Costales",
-    email: "costales.jefferson.cas@gmail.com",
-    dept: "CIT",
-  },
-];
+import { Filter, MyLoader, TableData } from "../components";
+import { UserPreview } from "../components/Modals";
+import {
+  facultyReceived,
+  facultyRequested,
+  facultyRequestFailed,
+  facultySorted,
+  getFaculties,
+} from "../store/faculties";
+
+import listItem from "../utils/filter";
+import facultiesApi from "../api/faculties";
 
 export default function Faculties({ history }) {
-  const [isToggle, setIsToggle] = useState(false);
+  const dispatch = useDispatch();
+  const faculties = useSelector(getFaculties);
+  const [showFacultyPreview, setShowFacultyPreview] = useState(false);
+  const [selectedFaculty, setSelectedFaculty] = useState({});
 
+  useEffect(() => {
+    const getFaculties = async () => {
+      try {
+        dispatch(facultyRequested());
+        const facultyList = await facultiesApi.getFaculties();
+        return dispatch(facultyReceived(facultyList.data));
+      } catch (error) {
+        return dispatch(facultyRequestFailed(error));
+      }
+    };
+
+    getFaculties();
+  }, []);
+
+  const approvedFaculties = faculties?.list?.filter(
+    (faculty) => faculty?.isActivated
+  );
+
+  const facultiesRequests = faculties?.list?.filter(
+    (faculty) => !faculty?.isActivated
+  );
+
+  const filtered =
+    faculties?.sortBy && faculties?.sortBy?.id
+      ? approvedFaculties?.filter(
+          (faculty) => faculty.dept === faculties?.sortBy?.value
+        )
+      : approvedFaculties;
+
+  const handleItemSelect = (item) => dispatch(facultySorted(item));
   return (
-    <Appcontainer>
-      <AppHeader>
-        <h1 className="m-0">Faculty List</h1>
-        <IconContainer>
-          <IconButton
-            icon={FiSearch}
-            size={40}
-            bg="#0064f9"
-            iconColor="#ffffff"
-            onClick={() => history.push("/dashboard/faculties/search")}
-          />
-          <IconButton
-            icon={FiPlus}
-            size={40}
-            bg="#0064f9"
-            iconColor="#ffffff"
-            onClick={() => setIsToggle(true)}
-          />
-        </IconContainer>
-      </AppHeader>
+    <>
+      <Appcontainer>
+        <AppHeader>
+          <h5 className="m-0 fw-bold">FACULTIES</h5>
+        </AppHeader>
 
-      <AppContent>
-        {faculties?.map((faculty) => (
-          <UserCard
-            user={faculty}
-            key={faculty.id}
-            onClick={() => history.push(`/dashboard/faculties/${faculty.id}`)}
+        <div className="d-flex align-items-center justify-content-between">
+          <Filter
+            items={listItem}
+            onSelectItem={handleItemSelect}
+            selectedItem={faculties?.sortBy}
           />
-        ))}
-      </AppContent>
 
-      <CustomModal
-        heading="Create Faculty Account"
-        show={isToggle}
-        onHide={() => setIsToggle(false)}
+          <Button
+            variant="outline-primary"
+            onClick={() => history.push("/dashboard/faculty-requests")}
+          >
+            Requests{"  "}
+            {facultiesRequests?.length !== 0 && (
+              <Badge bg="danger" variant="pill">
+                {facultiesRequests?.length}
+              </Badge>
+            )}
+          </Button>
+        </div>
+
+        {faculties?.loading ? (
+          <MyLoader />
+        ) : (
+          <Table borderless className="mt-2 w-100">
+            <TableHead>
+              <TableHeader>Profile</TableHeader>
+              <TableHeader>Email Address</TableHeader>
+              <TableHeader>Name</TableHeader>
+              <TableHeader>Position</TableHeader>
+              <TableHeader>Department</TableHeader>
+              <TableHeader>College</TableHeader>
+            </TableHead>
+            <tbody>
+              {filtered?.map((faculty) => (
+                <TableData
+                  key={faculty?._id}
+                  userInfo={faculty}
+                  onPreview={() => {
+                    setShowFacultyPreview(true);
+                    return setSelectedFaculty(faculty);
+                  }}
+                />
+              ))}
+            </tbody>
+          </Table>
+        )}
+      </Appcontainer>
+      <Modal
+        show={showFacultyPreview}
+        onHide={() => setShowFacultyPreview(false)}
       >
-        <CreateFacultyAccount />
-      </CustomModal>
-    </Appcontainer>
+        <UserPreview user={selectedFaculty} open={setShowFacultyPreview} />
+      </Modal>
+    </>
   );
 }
 
 const Appcontainer = styled.div`
   border-radius: 0.5rem;
   overflow: hidden;
-  padding: 0.5rem;
+  height: 610px;
+  overflow: auto;
 `;
 
 const AppHeader = styled.div`
-  padding: 0.5rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 4px solid ${(props) => props.theme.colors.secondary};
-
-  @media (min-width: ${(props) => props.theme.breakpoints.md}) {
-    padding: 1rem;
-  }
+  padding: 0.5rem;
+  border-bottom: 2px solid ${(props) => props.theme.colors.secondary};
 `;
 
-const IconContainer = styled.div`
-  > * {
-    margin-left: 5px;
-  }
+const TableHead = styled.thead`
+  text-transform: uppercase;
+  border-bottom: 2px solid ${({ theme }) => theme.colors.secondary};
 `;
 
-const AppContent = styled.div`
-  margin-top: 1rem;
-  display: grid;
-  gap: 0.5rem;
-
-  @media (min-width: ${(props) => props.theme.breakpoints.md}) {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 1rem;
-  }
-
-  @media (min-width: ${(props) => props.theme.breakpoints.lg}) {
-    grid-template-columns: repeat(3, 1fr);
-  }
+const TableHeader = styled.th`
+  padding: 1rem;
+  font-weight: 500;
 `;

@@ -15,8 +15,7 @@ const Info = styled.div`
   margin: 2px 0;
   align-items: center;
   border-left: 10px solid ${(props) => getColorMark(props.markColor)};
-  padding: 1em;
-  font-size: 1.2rem;
+  padding: 1rem;
   cursor: pointer;
   background: ${(props) => props.theme.colors.white};
   transition: all 0.3s;

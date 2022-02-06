@@ -1,30 +1,51 @@
+import moment from "moment";
 import React from "react";
-import { Card, Button } from "react-bootstrap";
 import styled from "styled-components";
-import { getLetterAvatarBg, getRelativeTime } from "../../utils";
+
+import { getLetterAvatarBg } from "../../utils";
 
 export default function EvaluationCard({ evaluationInfo, onPreview }) {
-  return (
-    <CardContainer>
-      <Card.Body>
-        <Card.Title>{evaluationInfo.title}</Card.Title>
-        <Badge dept={evaluationInfo.dept}>{evaluationInfo.dept}</Badge>
-        <Card.Text>{evaluationInfo.description}</Card.Text>
-        <Card.Text>Due: {getRelativeTime(evaluationInfo.due)}</Card.Text>
+  const diffInHours = moment().diff(
+    moment(parseInt(evaluationInfo.timeStamp)),
+    "hours"
+  );
 
-        <Button onClick={onPreview}>Preview</Button>
-      </Card.Body>
-    </CardContainer>
+  return (
+    <StyledCard onClick={onPreview}>
+      <CardBody>
+        <CardTitle>
+          Individual Performance Commitment Review (IPCR){" "}
+          <strong>
+            {parseInt(evaluationInfo.targetYear - 1)} -
+            {evaluationInfo.targetYear}
+          </strong>
+        </CardTitle>
+        <Badge college={evaluationInfo?.college?.acronym}>
+          {evaluationInfo?.college?.acronym}
+        </Badge>
+        {diffInHours < 5 && <NewBadge>New</NewBadge>}
+      </CardBody>
+    </StyledCard>
   );
 }
 
-const CardContainer = styled(Card)`
-  border-radius: 0.5rem;
+const StyledCard = styled.div`
   transition: all 0.3s;
+  cursor: pointer;
+  position: relative;
+  border: 2px solid ${({ theme }) => theme.colors.secondary};
 
   :hover {
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    border-bottom-color: ${({ theme }) => theme.colors.accent.emerald};
   }
+`;
+
+const CardBody = styled.div`
+  padding: 0.8rem;
+`;
+
+const CardTitle = styled.p`
+  width: 35ch;
 `;
 
 const Badge = styled.span`
@@ -32,7 +53,17 @@ const Badge = styled.span`
   font-size: ${(props) => props.theme.fontSize.paragraph.sm};
   font-weight: 500;
   padding: 0.2rem 0.5rem;
-  border-radius: 1rem;
-  background: ${(props) => getLetterAvatarBg(props.dept)};
+  background: ${(props) => getLetterAvatarBg(props.college)};
   color: ${(props) => props.theme.colors.white};
+`;
+
+const NewBadge = styled.span`
+  padding: 0.3rem 0.5rem;
+  color: ${(props) => props.theme.colors.white};
+  background: ${(props) => props.theme.colors.accent.red};
+  font-size: 10px;
+  font-weight: 500;
+  position: absolute;
+  top: 10px;
+  right: -2px;
 `;

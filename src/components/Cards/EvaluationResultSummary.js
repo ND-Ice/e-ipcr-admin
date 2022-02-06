@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { Card } from "react-bootstrap";
 import styled from "styled-components";
 
 import { Avatar, LetterAvatar } from "..";
@@ -14,40 +13,40 @@ export default function EvaluationResultSummary({ evaluation, onClick }) {
   console.log(evaluation);
   return (
     <CardContainer onClick={onClick}>
-      <Card.Body>
-        <CardHeader>
-          <div>
-            {isImageError || !evaluation.user.image ? (
-              <LetterAvatar user={evaluation.user} size={60} />
-            ) : (
-              <Avatar
-                user={evaluation.user}
-                size={60}
-                onError={() => setIsImageError(true)}
-              />
-            )}
-          </div>
-          <InformationContainer>
-            <h3 className="m-0">{evaluation.user?.name}</h3>
-            <p className="m-0">{evaluation?.user?.email}</p>
-            <Badge user={evaluation.dept}>{evaluation?.dept}</Badge>
-          </InformationContainer>
-        </CardHeader>
-        <p className="my-2">{evaluation?.title}</p>
-        <RemarksContainer>
-          <Remarks remarks={evaluation?.remarks}>{evaluation?.remarks}</Remarks>
-          <Sentiment sentiment={evaluation?.sentiment}>
-            {evaluation?.sentiment}
-          </Sentiment>
-        </RemarksContainer>
-      </Card.Body>
+      <CardHeader>
+        <div>
+          {isImageError || !evaluation.user.image ? (
+            <LetterAvatar user={evaluation.user} size={60} />
+          ) : (
+            <Avatar
+              user={evaluation.user}
+              size={60}
+              onError={() => setIsImageError(true)}
+            />
+          )}
+        </div>
+        <InformationContainer>
+          <h3 className="m-0">{evaluation.user?.name}</h3>
+          <p className="m-0">{evaluation?.user?.email}</p>
+          <Badge user={evaluation.dept}>{evaluation?.dept}</Badge>
+        </InformationContainer>
+      </CardHeader>
+      <p className="my-2">{evaluation?.title}</p>
+      <RemarksContainer>
+        <Remarks remarks={evaluation?.remarks}>{evaluation?.remarks}</Remarks>
+        <Sentiment sentiment={evaluation?.sentiment}>
+          {evaluation?.sentiment}
+        </Sentiment>
+      </RemarksContainer>
     </CardContainer>
   );
 }
 
-const CardContainer = styled(Card)`
-  cursor: pointer;
+const CardContainer = styled.div`
+  padding: 1rem;
   border-radius: 0.5rem;
+  background: ${(props) => props.theme.colors.secondary};
+  cursor: pointer;
   transition: all 0.3s;
 
   :hover {

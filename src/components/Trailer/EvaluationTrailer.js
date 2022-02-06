@@ -1,58 +1,22 @@
 import React from "react";
+import { useSelector } from "react-redux";
 import { useHistory } from "react-router";
 import styled from "styled-components";
-import { Divider, Links } from "..";
-import { EvaluationCard } from "../Cards";
 
-const evaluations = [
-  {
-    id: 1,
-    title: "2021-2022 IPCR Evaluation for CAS",
-    dept: "CAS",
-    description:
-      "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dicta porro iste sapiente nisi quaerat. Dolor nostrum quos tempora libero facilis!",
-    postDate: "2021/10/30",
-    due: "2021/12/20",
-  },
-  {
-    id: 2,
-    title: "2021-2022 IPCR Evaluation for CAS",
-    dept: "CHM",
-    description:
-      "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dicta porro iste sapiente nisi quaerat. Dolor nostrum quos tempora libero facilis!",
-    postDate: "2021/10/30",
-    due: "2021/12/20",
-  },
-  {
-    id: 3,
-    title: "2021-2022 IPCR Evaluation for CAS",
-    dept: "CAFA",
-    description:
-      "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dicta porro iste sapiente nisi quaerat. Dolor nostrum quos tempora libero facilis!",
-    postDate: "2021/10/30",
-    due: "2021/12/20",
-  },
-  {
-    id: 4,
-    title: "2021-2022 IPCR Evaluation for CAS",
-    dept: "CBA",
-    description:
-      "Lorem ipsum, dolor sit amet consectetur adipisicing elit. Dicta porro iste sapiente nisi quaerat. Dolor nostrum quos tempora libero facilis!",
-    postDate: "2021/10/30",
-    due: "2021/12/20",
-  },
-];
+import { Links } from "..";
+import { getOngoingEvaluations } from "../../store/evaluations";
+import { EvaluationCard } from "../Cards";
 
 export default function EvaluationTrailer() {
   const history = useHistory();
+  const evaluations = useSelector(getOngoingEvaluations);
   return (
     <Container>
-      <header>
-        <h2>Evaluations</h2>
-      </header>
-      <Divider bg="#000000" />
+      <AppHeader>
+        <h4 className="m-0">Evaluations</h4>
+      </AppHeader>
       <Content>
-        {evaluations.slice(0, 3).map((evaluation) => (
+        {evaluations?.slice(0, 3).map((evaluation) => (
           <EvaluationCard
             evaluationInfo={evaluation}
             key={evaluation.id}
@@ -63,14 +27,17 @@ export default function EvaluationTrailer() {
         ))}
       </Content>
       <LinkContainer>
-        <Links title="View More..." to="/dashboard/faculties" />
+        <Links title="View More..." to="/dashboard/evaluations" />
       </LinkContainer>
     </Container>
   );
 }
 
-const Container = styled.div`
-  padding: 1rem;
+const Container = styled.div``;
+
+const AppHeader = styled.div`
+  padding: 0.5rem;
+  border-bottom: 2px solid ${({ theme }) => theme.colors.secondary};
 `;
 
 const Content = styled.div`

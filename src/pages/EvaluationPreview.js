@@ -1,57 +1,89 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { EvaluationSummary, ResponseCountSummary } from "../components";
-import background from "../image/background.jpg";
+import moment from "moment";
+import { useDispatch, useSelector } from "react-redux";
+import { FiCalendar } from "react-icons/fi";
 
-export default function EvaluationPreview() {
+import { Logs, ResponseCountSummary } from "../components";
+
+import evaluationsApi from "../api/evaluations";
+import {
+  evaluationsRequested,
+  evaluationPreviewed,
+  evaluationsRequestFailed,
+  getEvaluations,
+} from "../store/evaluations";
+import { Button, Modal } from "react-bootstrap";
+
+export default function EvaluationPreview({ match }) {
+  const dispatch = useDispatch();
+  const id = match.params.id;
+  const evaluations = useSelector(getEvaluations);
+  const evaluation = evaluations.preview;
+  const [showLogs, setShowLogs] = useState(false);
+
+  useEffect(() => {
+    getEvaluationPreview(id);
+  }, []);
+
+  const getEvaluationPreview = async (evaluationId) => {
+    try {
+      dispatch(evaluationsRequested());
+      const evaluation = await evaluationsApi.getEvaluationPreview(
+        evaluationId
+      );
+      return dispatch(evaluationPreviewed(evaluation.data));
+    } catch (error) {
+      return dispatch(evaluationsRequestFailed(error));
+    }
+  };
+
   return (
-    <AppContainer>
-      <AppHeader bg={background}>
-        <AppHeading>2021-2022 E-IPCR for CAS</AppHeading>
-        <Description>
-          This is just some quick text to be a place holder for description
-          field, it can be 20 or 40 lines long of just random strings. this type
-          of quick text can only be done or written by a legendary person. that
-          person is a porn addict.
-        </Description>
-      </AppHeader>
-      <AppContent>
-        <ResponseCountSummary />
-        <EvaluationSummary />
-      </AppContent>
-    </AppContainer>
+    <>
+      <AppContainer>
+        <Title>
+          Individual Performance Commitment Review (IPCR){" "}
+          <strong>
+            {evaluation.targetYear}-{evaluation.targetYear - 1}
+          </strong>
+        </Title>
+        <DueDate>
+          <FiCalendar className="icon" /> {moment(evaluation.due).format("LL")}
+        </DueDate>
+        <AppContent>
+          <ResponseCountSummary />
+          <Button
+            variant="outline-primary"
+            className="mt-3"
+            onClick={() => setShowLogs(true)}
+          >
+            View Logs
+          </Button>
+        </AppContent>
+      </AppContainer>
+
+      <Modal fullscreen show={showLogs} onHide={() => setShowLogs(false)}>
+        <Logs open={setShowLogs} />
+      </Modal>
+    </>
   );
 }
 
 const AppContainer = styled.div``;
 
-const AppHeader = styled.div`
-  padding: 2rem;
-  border-radius: 0.5rem;
-  background: url(${(props) => props.bg});
-  background-size: cover;
-  background-position: center;
-`;
-
-const AppHeading = styled.h1`
-  color: ${(props) => props.theme.colors.white};
-  max-width: 40ch;
-`;
-
-const Description = styled.p`
-  color: ${(props) => props.theme.colors.white};
-
-  @media (min-width: ${(props) => props.theme.breakpoints.md}) {
-    max-width: 80ch;
-  }
-`;
-
 const AppContent = styled.div`
-  display: grid;
-  margin-top: 0.5rem;
-  gap: 0.5rem;
+  margin-top: 1rem;
+`;
 
-  @media (min-width: ${(props) => props.theme.breakpoints.lg}) {
-    grid-template-columns: 1fr 3fr;
+const Title = styled.h4`
+  width: 40ch;
+`;
+
+const DueDate = styled.div`
+  display: flex;
+  align-items: center;
+
+  .icon {
+    margin-right: 0.5rem;
   }
 `;
