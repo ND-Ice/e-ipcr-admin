@@ -63,7 +63,7 @@ export default function EvaluationPreview({ match }) {
       </AppContainer>
 
       <Modal fullscreen show={showLogs} onHide={() => setShowLogs(false)}>
-        <Logs open={setShowLogs} />
+        <Logs open={setShowLogs} id={id} />
       </Modal>
     </>
   );

@@ -1,35 +1,28 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FiX } from "react-icons/fi";
+import logsApi from "../api/logs";
+
 import { LogItem } from ".";
 
-const logs = [
-  {
-    id: 1,
-    actionCreator: "Joshua Dela Cruz",
-    actionCreatorPosition: "Intermediate Supervisor",
-    actionMessage: "Evaluated and subitted the evaluation of",
-    actionTarget: "Ezekiel Dela Cruz",
-    actionTime: "1 day hours ago",
-  },
-  {
-    id: 2,
-    actionCreator: "Sherwin Beltran",
-    actionCreatorPosition: "Regular Faculty",
-    actionMessage: "Submitted an evaluation response",
-    actionTime: "5 hours ago",
-  },
-  {
-    id: 1,
-    actionCreator: "Collins Laguit",
-    actionCreatorPosition: "DIRECTOR",
-    actionMessage: "Approved and signed the evaluation of",
-    actionTarget: "Joshua Dela Cruz",
-    actionTime: "2 hours ago",
-  },
-];
+export default function Logs({ open, id }) {
+  const [logs, setLogs] = useState([]);
 
-export default function Logs({ open }) {
+  useEffect(() => {
+    const getEvaluationLogs = async () => {
+      try {
+        const response = await logsApi.getEvaluationLogs(id);
+        setLogs(response.data);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    getEvaluationLogs();
+  }, []);
+
+  console.log(logs);
+
   return (
     <Container>
       <div className="d-flex align-items-center justify-content-between">
