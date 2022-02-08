@@ -110,6 +110,7 @@ export default function Users({ history }) {
 }
 
 const Appcontainer = styled.div`
+  padding: 0 1rem;
   border-radius: 0.5rem;
   overflow: hidden;
 `;
