@@ -64,7 +64,7 @@ export default function EvaluationPreview({ match }) {
         <Title>
           Individual Performance Commitment Review (IPCR){" "}
           <strong>
-            {evaluation.targetYear - 1} - {evaluation.targetYear}
+            {evaluation?.targetYear - 1} - {evaluation?.targetYear}
           </strong>
         </Title>
         <DueDate>
