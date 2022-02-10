@@ -8,6 +8,7 @@ import { FiCalendar } from "react-icons/fi";
 import { Logs, ResponseData, ViewResponse } from "../components";
 import evaluationsApi from "../api/evaluations";
 import responseApi from "../api/response";
+import { MyLoader } from "../components";
 
 import {
   evaluationsRequested,
@@ -22,7 +23,7 @@ export default function EvaluationPreview({ match }) {
   const { list } = useSelector(getResponses);
   const id = match.params.id;
   const evaluations = useSelector(getEvaluations);
-  const evaluation = evaluations.preview;
+  const evaluation = evaluations?.preview;
   const [showLogs, setShowLogs] = useState(false);
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState("");
@@ -58,15 +59,13 @@ export default function EvaluationPreview({ match }) {
     }
   };
 
-  console.log(evaluation);
-
   return (
     <>
       <AppContainer>
         <Title>
           Individual Performance Commitment Review (IPCR){" "}
           <strong>
-            {parseInt(evaluation?.targetYear - 1)} - {evaluation?.targetYear}
+            {parseInt(evaluation.targetYear - 1)} - {evaluation?.targetYear}
           </strong>
         </Title>
         <DueDate>
@@ -84,32 +83,36 @@ export default function EvaluationPreview({ match }) {
           </Button>
         </div>
 
-        <Table>
-          <tbody>
-            <tr className="text-uppercase">
-              <td>Profile</td>
-              <td>Name</td>
-              <td>Email Address</td>
-              <td>Date Submitted</td>
-              <td>Final Average</td>
-              <td>Adjectival Rating</td>
-              <td></td>
-            </tr>
-            <tr>
-              <td colSpan={7}></td>
-            </tr>
-            {list?.map((response) => (
-              <ResponseData
-                key={response?._id}
-                response={response}
-                onPreview={() => {
-                  setSelectedResponse(response);
-                  return setShowResponsePreview(true);
-                }}
-              />
-            ))}
-          </tbody>
-        </Table>
+        {loading ? (
+          <MyLoader />
+        ) : (
+          <Table>
+            <tbody>
+              <tr className="text-uppercase">
+                <td>Profile</td>
+                <td>Name</td>
+                <td>Email Address</td>
+                <td>Date Submitted</td>
+                <td>Final Average</td>
+                <td>Adjectival Rating</td>
+                <td></td>
+              </tr>
+              <tr>
+                <td colSpan={7}></td>
+              </tr>
+              {list?.map((response) => (
+                <ResponseData
+                  key={response?._id}
+                  response={response}
+                  onPreview={() => {
+                    setSelectedResponse(response);
+                    return setShowResponsePreview(true);
+                  }}
+                />
+              ))}
+            </tbody>
+          </Table>
+        )}
       </AppContainer>
 
       <Modal fullscreen show={showLogs} onHide={() => setShowLogs(false)}>
