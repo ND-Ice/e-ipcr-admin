@@ -64,13 +64,9 @@ export default function EvaluationPreview({ match }) {
           <FiCalendar className="icon" /> Due{" "}
           {moment(evaluationPreview?.due).endOf("day").fromNow()}
         </DueDate>
-        <div className="d-flex align-items-center justify-content-between mt-4">
-          <h5 className="text-uppercase fw-bold">Reponses</h5>
-          <Button
-            variant="outline-primary"
-            className="mt-3"
-            onClick={() => setShowLogs(true)}
-          >
+        <div className="d-flex align-items-center justify-content-between mt-4 mb-4">
+          <h5 className="m-0 text-uppercase fw-bold">Reponses</h5>
+          <Button variant="outline-primary" onClick={() => setShowLogs(true)}>
             View Logs
           </Button>
         </div>
