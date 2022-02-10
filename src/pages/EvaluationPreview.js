@@ -64,51 +64,50 @@ export default function EvaluationPreview({ match }) {
         <Title>
           Individual Performance Commitment Review (IPCR){" "}
           <strong>
-            {evaluation?.targetYear - 1} - {evaluation?.targetYear}
+            {parseInt(evaluation?.targetYear) - 1} - {evaluation?.targetYear}
           </strong>
         </Title>
         <DueDate>
-          <FiCalendar className="icon" /> {moment(evaluation.due).format("LL")}
+          <FiCalendar className="icon" /> Due{" "}
+          {moment(evaluation.due).endOf("hour").fromNow()}
         </DueDate>
-        <AppContent>
-          <div className="d-flex align-items-center justify-content-between mb-4">
-            <h5 className="text-uppercase fw-bold">Reponses</h5>
-            <Button
-              variant="outline-primary"
-              className="mt-3"
-              onClick={() => setShowLogs(true)}
-            >
-              View Logs
-            </Button>
-          </div>
+        <div className="d-flex align-items-center justify-content-between mt-4">
+          <h5 className="text-uppercase fw-bold">Reponses</h5>
+          <Button
+            variant="outline-primary"
+            className="mt-3"
+            onClick={() => setShowLogs(true)}
+          >
+            View Logs
+          </Button>
+        </div>
 
-          <Table>
-            <tbody>
-              <tr className="text-uppercase">
-                <td>Profile</td>
-                <td>Name</td>
-                <td>Email Address</td>
-                <td>Date Submitted</td>
-                <td>Final Average</td>
-                <td>Adjectival Rating</td>
-                <td></td>
-              </tr>
-              <tr>
-                <td colSpan={7}></td>
-              </tr>
-              {list?.map((response) => (
-                <ResponseData
-                  key={response?._id}
-                  response={response}
-                  onPreview={() => {
-                    setSelectedResponse(response);
-                    return setShowResponsePreview(true);
-                  }}
-                />
-              ))}
-            </tbody>
-          </Table>
-        </AppContent>
+        <Table>
+          <tbody>
+            <tr className="text-uppercase">
+              <td>Profile</td>
+              <td>Name</td>
+              <td>Email Address</td>
+              <td>Date Submitted</td>
+              <td>Final Average</td>
+              <td>Adjectival Rating</td>
+              <td></td>
+            </tr>
+            <tr>
+              <td colSpan={7}></td>
+            </tr>
+            {list?.map((response) => (
+              <ResponseData
+                key={response?._id}
+                response={response}
+                onPreview={() => {
+                  setSelectedResponse(response);
+                  return setShowResponsePreview(true);
+                }}
+              />
+            ))}
+          </tbody>
+        </Table>
       </AppContainer>
 
       <Modal fullscreen show={showLogs} onHide={() => setShowLogs(false)}>

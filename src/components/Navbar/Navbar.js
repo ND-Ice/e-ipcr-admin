@@ -7,7 +7,7 @@ import { useHistory, useLocation } from "react-router";
 
 const sidebarItems = [
   { id: 1, path: "/dashboard", title: "FACULTIES", icon: FiUsers },
-  { id: 2, path: "/dashboard/users", title: "USERS", icon: FiUsers },
+  { id: 2, path: "/dashboard/users", title: "OFFICERS", icon: FiUsers },
   {
     id: 3,
     path: "/dashboard/evaluations",

@@ -1,27 +1,31 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FiX } from "react-icons/fi";
-import logsApi from "../api/logs";
+import { RotateLoader } from "react-spinners";
 
+import logsApi from "../api/logs";
 import { LogItem } from ".";
 
 export default function Logs({ open, id }) {
   const [logs, setLogs] = useState([]);
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState("");
 
   useEffect(() => {
     const getEvaluationLogs = async () => {
       try {
+        setLoading(true);
         const response = await logsApi.getEvaluationLogs(id);
-        setLogs(response.data);
+        setLoading(false);
+        return setLogs(response.data);
       } catch (error) {
-        console.log(error);
+        setLoading(false);
+        return setErrorMessage(error);
       }
     };
 
     getEvaluationLogs();
   }, []);
-
-  console.log(logs);
 
   return (
     <Container>
@@ -32,11 +36,19 @@ export default function Logs({ open, id }) {
         </IconContainer>
       </div>
 
-      <div>
-        {logs?.map((log) => (
-          <LogItem key={log?.id} log={log} />
-        ))}
-      </div>
+      {!loading ? (
+        <div>
+          {logs
+            ?.sort((a, b) => b?.date - a?.date)
+            ?.map((log) => (
+              <LogItem key={log?.id} log={log} />
+            ))}
+        </div>
+      ) : (
+        <Loader>
+          <RotateLoader loading={true} color="#0064f9" />
+        </Loader>
+      )}
     </Container>
   );
 }
@@ -61,4 +73,11 @@ const IconContainer = styled.div`
   :hover {
     background: ${({ theme }) => theme.colors.secondary};
   }
+`;
+
+const Loader = styled.div`
+  padding: 1rem;
+  height: 500px;
+  display: grid;
+  place-items: center;
 `;

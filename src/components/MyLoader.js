@@ -1,11 +1,11 @@
 import React from "react";
 import styled from "styled-components";
-import { HashLoader } from "react-spinners";
+import { RotateLoader } from "react-spinners";
 
 export default function MyLoader() {
   return (
     <Container>
-      <HashLoader loading={true} size={60} color="#0064f9" />
+      <RotateLoader loading={true} color="#0064f9" />
     </Container>
   );
 }

@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { FiSearch } from "react-icons/fi";
 import { useDispatch, useSelector } from "react-redux";
 
-import { Filter, IconButton, MyLoader, TableData } from "../components";
-import { deansReceived, deansSorted, getDeans } from "../store/deans";
+import { Filter, MyLoader, TableData } from "../components";
+import {
+  deansReceived,
+  deansRequested,
+  deansRequestFailed,
+  deansSorted,
+  getDeans,
+} from "../store/deans";
 import { Badge, Button, Modal, Table } from "react-bootstrap";
 import { UserPreview } from "../components/Modals";
 
 import deansApi from "../api/deans";
-import UserData from "../components/UserData";
 
 const listItem = [
   { value: "ALL" },
@@ -29,10 +33,11 @@ export default function Users({ history }) {
   useEffect(() => {
     const getUsers = async () => {
       try {
+        dispatch(deansRequested());
         const response = await deansApi.getDeans();
         return dispatch(deansReceived(response.data));
       } catch (error) {
-        console.log(error);
+        dispatch(deansRequestFailed(error));
       }
     };
 
@@ -54,7 +59,7 @@ export default function Users({ history }) {
     <>
       <Appcontainer>
         <AppHeader>
-          <h5 className="m-0 fw-bold text-uppercase">USERS</h5>
+          <h5 className="m-0 fw-bold text-uppercase">OFFICERS</h5>
         </AppHeader>
 
         <div className="d-flex align-items-center justify-content-between">

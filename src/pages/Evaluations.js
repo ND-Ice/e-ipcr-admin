@@ -4,7 +4,6 @@ import { useSelector } from "react-redux";
 import { useDispatch } from "react-redux";
 
 import {
-  evaluationSorted,
   evaluationsReceived,
   evaluationsRequested,
   evaluationsRequestFailed,
@@ -12,6 +11,7 @@ import {
 } from "../store/evaluations";
 import { EvaluationCard } from "../components/Cards";
 import evaluationsApi from "../api/evaluations";
+import { MyLoader } from "../components";
 
 export default function Evaluations({ history }) {
   const dispatch = useDispatch();
@@ -36,17 +36,21 @@ export default function Evaluations({ history }) {
         <h5 className="m-0 fw-bold">EVALUATIONS</h5>
       </AppHeader>
 
-      <AppContent>
-        {evaluations?.list?.map((evaluation) => (
-          <EvaluationCard
-            evaluationInfo={evaluation}
-            key={evaluation.id}
-            onPreview={() =>
-              history.push(`/dashboard/evaluations/${evaluation._id}`)
-            }
-          />
-        ))}
-      </AppContent>
+      {evaluations?.loading ? (
+        <MyLoader />
+      ) : (
+        <div>
+          {evaluations?.list?.map((evaluation) => (
+            <EvaluationCard
+              evaluationInfo={evaluation}
+              key={evaluation.id}
+              onPreview={() =>
+                history.push(`/dashboard/evaluations/${evaluation._id}`)
+              }
+            />
+          ))}
+        </div>
+      )}
     </AppContainer>
   );
 }
@@ -58,5 +62,3 @@ const AppHeader = styled.div`
   border-bottom: 2px solid ${({ theme }) => theme.colors.secondary};
   padding: 0.5rem;
 `;
-
-const AppContent = styled.div``;
