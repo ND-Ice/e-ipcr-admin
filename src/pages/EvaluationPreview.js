@@ -63,13 +63,15 @@ export default function EvaluationPreview({ match }) {
       <AppContainer>
         <Title>
           Individual Performance Commitment Review (IPCR){" "}
-          <strong>
-            {parseInt(evaluation?.targetYear) - 1} - {evaluation?.targetYear}
-          </strong>
+          {evaluation?.targetYear && (
+            <strong>
+              {parseInt(evaluation.targetYear) - 1} - {evaluation.targetYear}
+            </strong>
+          )}
         </Title>
         <DueDate>
           <FiCalendar className="icon" /> Due{" "}
-          {moment(evaluation.due).endOf("hour").fromNow()}
+          {moment(evaluation.due).endOf("day").fromNow()}
         </DueDate>
         <div className="d-flex align-items-center justify-content-between mt-4">
           <h5 className="text-uppercase fw-bold">Reponses</h5>
