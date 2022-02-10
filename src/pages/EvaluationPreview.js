@@ -58,13 +58,15 @@ export default function EvaluationPreview({ match }) {
     }
   };
 
+  console.log(evaluation);
+
   return (
     <>
       <AppContainer>
         <Title>
           Individual Performance Commitment Review (IPCR){" "}
           <strong>
-            {parseInt(evaluation.targetYear) - 1} - {evaluation.targetYear}
+            {parseInt(evaluation?.targetYear - 1)} - {evaluation?.targetYear}
           </strong>
         </Title>
         <DueDate>
