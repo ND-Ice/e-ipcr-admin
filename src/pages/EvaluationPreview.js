@@ -31,21 +31,12 @@ export default function EvaluationPreview({ match }) {
   const [showResponsePreview, setShowResponsePreview] = useState(false);
 
   useEffect(() => {
-    getEvaluationPreview(id);
     getEvaluationResponse(id);
   }, []);
 
-  const getEvaluationPreview = async (evaluationId) => {
-    try {
-      dispatch(evaluationsRequested());
-      const evaluation = await evaluationsApi.getEvaluationPreview(
-        evaluationId
-      );
-      return dispatch(evaluationPreviewed(evaluation.data));
-    } catch (error) {
-      return dispatch(evaluationsRequestFailed(error));
-    }
-  };
+  const evaluationPreview = evaluations?.list?.filter(
+    (evaluation) => evaluation?._id === id
+  )[0];
 
   const getEvaluationResponse = async (evaluationId) => {
     try {
@@ -65,12 +56,13 @@ export default function EvaluationPreview({ match }) {
         <Title>
           Individual Performance Commitment Review (IPCR){" "}
           <strong>
-            {parseInt(evaluation.targetYear) - 1} - {evaluation?.targetYear}
+            {parseInt(evaluationPreview.targetYear) - 1} -{" "}
+            {evaluationPreview?.targetYear}
           </strong>
         </Title>
         <DueDate>
           <FiCalendar className="icon" /> Due{" "}
-          {moment(evaluation?.due).endOf("day").fromNow()}
+          {moment(evaluationPreview?.due).endOf("day").fromNow()}
         </DueDate>
         <div className="d-flex align-items-center justify-content-between mt-4">
           <h5 className="text-uppercase fw-bold">Reponses</h5>
