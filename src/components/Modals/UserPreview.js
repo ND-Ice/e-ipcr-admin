@@ -5,6 +5,7 @@ import moment from "moment";
 
 import { Avatar, LetterAvatar } from "..";
 import { getLetterAvatarBg } from "../../utils";
+import getAcronymMeaning from "../../utils/getAcronymMeaning";
 
 export default function UserPreview({ user }) {
   const [imgError, setImgError] = useState();
@@ -25,10 +26,7 @@ export default function UserPreview({ user }) {
             <Position>( {user?.position} )</Position>
           </h5>
           <p className="text-muted m-0">
-            {user?.email}{" "}
-            <Badge college={user?.college?.acronym}>
-              {user?.college?.acronym}
-            </Badge>
+            {user?.email} <Badge college={user?.college}>{user?.college}</Badge>
           </p>
         </div>
       </AppHeader>
@@ -38,8 +36,7 @@ export default function UserPreview({ user }) {
           Born in, <strong> {moment(user?.birthDate).format("LL")} </strong>
         </p>
         <p className="m-0">
-          College of Arts and Sciences department of{" "}
-          <strong>{user?.dept}</strong>
+          <strong>{getAcronymMeaning(user?.college)}</strong>
         </p>
       </Content>
     </Container>
