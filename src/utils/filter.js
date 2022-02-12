@@ -1,12 +1,12 @@
 const colleges = [
-  { id: 1, value: "ALL" },
-  { id: 2, value: "CAFA" },
-  { id: 3, value: "CAS" },
-  { id: 4, value: "CED" },
-  { id: 5, value: "CEN" },
-  { id: 6, value: "CHM" },
-  { id: 7, value: "CIT" },
-  { id: 8, value: "CCJE" },
+  { value: "ALL" },
+  { id: 1, value: "CAFA" },
+  { id: 2, value: "CAS" },
+  { id: 3, value: "CED" },
+  { id: 4, value: "CEN" },
+  { id: 5, value: "CHM" },
+  { id: 6, value: "CIT" },
+  { id: 7, value: "CPAC" },
 ];
 
 export default colleges;
