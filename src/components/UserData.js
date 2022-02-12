@@ -24,9 +24,7 @@ export default function UserData({ userInfo, onAccept, onReject }) {
         {userInfo?.position}
       </TableDataItem>
       <TableDataItem>
-        <Badge college={userInfo?.college?.acronym}>
-          {userInfo?.college?.acronym}
-        </Badge>
+        <Badge college={userInfo?.college}>{userInfo?.college}</Badge>
       </TableDataItem>
       <TableDataItem>
         <Button className="me-2" onClick={onAccept}>
@@ -54,6 +52,7 @@ const Badge = styled.span`
   padding: 6px 12px;
   border-radius: 1rem;
   font-size: 12px;
+  font-weight: bold;
   color: ${({ theme }) => theme.colors.white};
   background: ${({ college }) => getLetterAvatarBg(college)};
 `;

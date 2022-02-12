@@ -13,7 +13,7 @@ import {
   getFaculties,
 } from "../store/faculties";
 
-import listItem from "../utils/filter";
+import colleges from "../utils/filter";
 import facultiesApi from "../api/faculties";
 
 export default function Faculties({ history }) {
@@ -47,7 +47,7 @@ export default function Faculties({ history }) {
   const filtered =
     faculties?.sortBy && faculties?.sortBy?.id
       ? approvedFaculties?.filter(
-          (faculty) => faculty.dept === faculties?.sortBy?.value
+          (faculty) => faculty.college === faculties?.sortBy?.value
         )
       : approvedFaculties;
 
@@ -61,7 +61,7 @@ export default function Faculties({ history }) {
 
         <div className="d-flex align-items-center justify-content-between">
           <Filter
-            items={listItem}
+            items={colleges}
             onSelectItem={handleItemSelect}
             selectedItem={faculties?.sortBy}
           />
@@ -88,7 +88,6 @@ export default function Faculties({ history }) {
               <TableHeader>Email Address</TableHeader>
               <TableHeader>Name</TableHeader>
               <TableHeader>Position</TableHeader>
-              <TableHeader>Department</TableHeader>
               <TableHeader>College</TableHeader>
             </TableHead>
             <tbody>

@@ -28,15 +28,8 @@ export default function TableData({ userInfo, onPreview }) {
       <TableDataItem className="text-uppercase">
         {userInfo?.position}
       </TableDataItem>
-      {userInfo?.dept && (
-        <TableDataItem>
-          <Badge college={userInfo?.college?.acronym}>{userInfo?.dept}</Badge>
-        </TableDataItem>
-      )}
       <TableDataItem>
-        <Badge college={userInfo?.college?.acronym}>
-          {userInfo?.college?.acronym}
-        </Badge>
+        <Badge college={userInfo?.college}>{userInfo?.college}</Badge>
       </TableDataItem>
       <TableDataItem>
         {diffInHours < 5 ? <NewBadge>New</NewBadge> : null}
