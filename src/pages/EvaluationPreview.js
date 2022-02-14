@@ -4,8 +4,9 @@ import moment from "moment";
 import { useDispatch, useSelector } from "react-redux";
 import { Button, Modal, Table } from "react-bootstrap";
 import { FiCalendar } from "react-icons/fi";
+import listItem from "../utils/filter";
 
-import { Logs, ResponseData, ViewResponse } from "../components";
+import { Filter, Logs, ResponseData, ViewResponse } from "../components";
 import evaluationsApi from "../api/evaluations";
 import responseApi from "../api/response";
 import { MyLoader } from "../components";
@@ -29,6 +30,7 @@ export default function EvaluationPreview({ match }) {
   const [errorMessage, setErrorMessage] = useState("");
   const [selectedResponse, setSelectedResponse] = useState({});
   const [showResponsePreview, setShowResponsePreview] = useState(false);
+  const [sortBy, setSortBy] = useState({ value: "All" });
 
   useEffect(() => {
     getEvaluationResponse(id);
@@ -50,6 +52,16 @@ export default function EvaluationPreview({ match }) {
     }
   };
 
+  const filtered =
+    sortBy && sortBy?.id
+      ? list?.filter(
+          (response) =>
+            response?.status?.faculty?.user?.college === sortBy?.value
+        )
+      : list;
+
+  const handleItemSelect = (item) => setSortBy(item);
+
   return (
     <>
       <AppContainer>
@@ -70,6 +82,11 @@ export default function EvaluationPreview({ match }) {
             View Logs
           </Button>
         </div>
+        <Filter
+          items={listItem}
+          selectedItem={sortBy}
+          onSelectItem={handleItemSelect}
+        />
 
         {loading ? (
           <MyLoader />
@@ -88,7 +105,7 @@ export default function EvaluationPreview({ match }) {
               <tr>
                 <td colSpan={7}></td>
               </tr>
-              {list?.map((response) => (
+              {filtered?.map((response) => (
                 <ResponseData
                   key={response?._id}
                   response={response}
