@@ -78,9 +78,9 @@ export default function EvaluationPreview({ match }) {
         </DueDate>
         <div className="d-flex align-items-center justify-content-between mt-4 mb-4">
           <h5 className="m-0 text-uppercase fw-bold">Reponses</h5>
-          <Button variant="outline-primary" onClick={() => setShowLogs(true)}>
+          {/* <Button variant="outline-primary" onClick={() => setShowLogs(true)}>
             View Logs
-          </Button>
+          </Button> */}
         </div>
         <Filter
           items={listItem}

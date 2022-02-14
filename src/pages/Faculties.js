@@ -47,7 +47,7 @@ export default function Faculties({ history }) {
   const filtered =
     faculties?.sortBy && faculties?.sortBy?.id
       ? approvedFaculties?.filter(
-          (faculty) => faculty.college === faculties?.sortBy?.value
+          (faculty) => faculty?.college === faculties?.sortBy?.value
         )
       : approvedFaculties;
 

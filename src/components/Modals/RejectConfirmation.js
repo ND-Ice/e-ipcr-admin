@@ -1,6 +1,5 @@
 import React from "react";
 import { Alert, Button } from "react-bootstrap";
-import { useDispatch } from "react-redux";
 import styled from "styled-components";
 
 export default function RejectConfirmation({
