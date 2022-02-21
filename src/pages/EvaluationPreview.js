@@ -64,33 +64,30 @@ export default function EvaluationPreview({ match }) {
 
   return (
     <>
-      <AppContainer>
-        <Title>
-          Individual Performance Commitment Review (IPCR){" "}
-          <strong>
-            {parseInt(evaluationPreview.targetYear) - 1} -{" "}
-            {evaluationPreview?.targetYear}
-          </strong>
-        </Title>
-        <DueDate>
-          <FiCalendar className="icon" /> Due{" "}
-          {moment(evaluationPreview?.due).endOf("day").fromNow()}
-        </DueDate>
-        <div className="d-flex align-items-center justify-content-between mt-4 mb-4">
-          <h5 className="m-0 text-uppercase fw-bold">Reponses</h5>
-          {/* <Button variant="outline-primary" onClick={() => setShowLogs(true)}>
-            View Logs
-          </Button> */}
-        </div>
-        <Filter
-          items={listItem}
-          selectedItem={sortBy}
-          onSelectItem={handleItemSelect}
-        />
+      {loading ? (
+        <MyLoader />
+      ) : (
+        <AppContainer>
+          <Title>
+            Individual Performance Commitment Review (IPCR){" "}
+            <strong>
+              {parseInt(evaluationPreview.targetYear) - 1} -{" "}
+              {evaluationPreview?.targetYear}
+            </strong>
+          </Title>
+          <DueDate>
+            <FiCalendar className="icon" /> Due{" "}
+            {moment(evaluationPreview?.due).startOf("hour").fromNow()}
+          </DueDate>
+          <div className="d-flex align-items-center justify-content-between mt-4 mb-4">
+            <h5 className="m-0 text-uppercase fw-bold">Reponses</h5>
+          </div>
+          <Filter
+            items={listItem}
+            selectedItem={sortBy}
+            onSelectItem={handleItemSelect}
+          />
 
-        {loading ? (
-          <MyLoader />
-        ) : (
           <Table>
             <tbody>
               <tr className="text-uppercase">
@@ -117,8 +114,8 @@ export default function EvaluationPreview({ match }) {
               ))}
             </tbody>
           </Table>
-        )}
-      </AppContainer>
+        </AppContainer>
+      )}
 
       <Modal fullscreen show={showLogs} onHide={() => setShowLogs(false)}>
         <Logs open={setShowLogs} id={id} />

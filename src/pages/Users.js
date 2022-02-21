@@ -17,11 +17,10 @@ import deansApi from "../api/deans";
 
 const listItem = [
   { value: "ALL" },
-  { id: 1, value: "CHAIRPERSON" },
-  { id: 2, value: "INTERMEDIATE SUPERVISOR" },
-  { id: 3, value: "DIRECTOR" },
-  { id: 4, value: "PMT" },
-  { id: 5, value: "HEAD" },
+  { id: 1, value: "INTERMEDIATE SUPERVISOR" },
+  { id: 2, value: "DIRECTOR" },
+  { id: 3, value: "PMT" },
+  { id: 4, value: "HEAD" },
 ];
 
 export default function Users({ history }) {
